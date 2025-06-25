@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->id();
             $table->string('username');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('number')->unique();
             $table->foreignId('role_id')->constrained();
@@ -32,6 +32,18 @@ return new class extends Migration {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('cache', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->mediumText('value');
+            $table->integer('expiration');
+        });
+
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
+            $table->integer('expiration');
         });
 
         // Schema::create('sessions', function (Blueprint $table) {
@@ -52,6 +64,8 @@ return new class extends Migration {
         Schema::dropIfExists('roles');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('cache');
+        Schema::dropIfExists('cache_locks');
         // Schema::dropIfExists('sessions');
     }
 };
