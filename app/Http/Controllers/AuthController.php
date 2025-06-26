@@ -19,17 +19,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required|string',
-            'password' => 'required',
-        ]);
-
         try {
+            $credentials = $request->validate([
+                'username' => 'required|string',
+                'password' => 'required',
+            ]);
+
 
             $data = $this->authService->loginUser($credentials);
 
             return response()->json([
-                'message' => 'Login succes',
+                'message' => 'Login success',
                 'data' => $data
             ], 200);
 
@@ -38,6 +38,24 @@ class AuthController extends Controller
                 'message' => 'Login failed',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+
+            $request->user()->currentAccessToken()->delete();
+
+            return response()->json([
+                'message' => "Logout success"
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Logout failed',
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
