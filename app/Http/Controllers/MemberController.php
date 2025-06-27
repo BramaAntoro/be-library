@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\MemberService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class MemberController extends Controller
 {
@@ -49,13 +50,13 @@ class MemberController extends Controller
             return response()->json([
                 'message' => "Member account with name $member->username has been created",
                 'data' => $member
-            ]);
+            ], 200);
 
-        } catch (\Exception $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'failed to create a member account',
-                'error' => $e->getMessage()
-            ]);
+                'error' => $e->errors()
+            ], 500);
         }
     }
 

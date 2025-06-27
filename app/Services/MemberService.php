@@ -16,6 +16,5 @@ class MemberService
             'number' => $credentials['number'],
             'role_id' => 2,
         ]);
-
     }
 }

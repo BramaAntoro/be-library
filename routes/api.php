@@ -9,7 +9,13 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/login', [AuthController::class, 'login'])->middleware('AlreadyLoggedIn');
 
-Route::post('/create-member', [MemberController::class, 'store']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::post('/create-member', [MemberController::class, 'store']);
+    });
+
+});
