@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\MemberService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -20,7 +22,21 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+        try {
+
+            $members = $this->memberService->getAllMembers();
+
+            return response()->json([
+                "message" => "Data members",
+                'data' => $members
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "failed to retrieve member data",
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -81,7 +97,28 @@ class MemberController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $credentials = $request->validate([
+                'username' => 'string',
+                'email' => 'email|unique:users,email',
+                'password' => 'min:6',
+                'number' => 'integer|unique:users,number|min:10',
+            ]);
+
+            $updatedMember = $this->memberService->UpdateMember($id, $credentials);
+
+            return response()->json([
+                "message" => "Member $updatedMember->username successfully updated",
+                "data" => $updatedMember
+            ], 200);            
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'failed to update a member account',
+                'error' => $e->errors()
+            ], 500);
+        }
     }
 
     /**
@@ -89,6 +126,23 @@ class MemberController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $this->memberService->deleteMember($id);
+
+            return response()->json([
+                'message' => 'Member successfully deleted'
+            ], 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "message" => "member not found",
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "Member failed to delete",
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -15,7 +15,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
     Route::middleware('role:admin')->group(function () {
-        Route::post('/create-member', [MemberController::class, 'store']);
+
+        Route::post('/member', [MemberController::class, 'store']);
+        Route::get('/members', [MemberController::class, 'index']);
+        Route::delete('/member/{id}', [MemberController::class, 'destroy']);
+        Route::put('/member/{id}', [MemberController::class, 'update']);
+
     });
 
 });
