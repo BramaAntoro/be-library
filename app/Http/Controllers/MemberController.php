@@ -20,9 +20,20 @@ class MemberController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+
+            $search = $request->query('search');
+
+            if ($search) {
+                $members = $this->memberService->searchMember($search);
+
+                return response()->json([
+                    "message" => "Search result",
+                    'data' => $members
+                ], 200);
+            }
 
             $members = $this->memberService->getAllMembers();
 
@@ -71,7 +82,7 @@ class MemberController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'failed to create a member account',
-                'error' => $e->errors()
+                'errors' => $e->errors()
             ], 500);
         }
     }
@@ -111,7 +122,7 @@ class MemberController extends Controller
             return response()->json([
                 "message" => "Member $updatedMember->username successfully updated",
                 "data" => $updatedMember
-            ], 200);            
+            ], 200);
 
         } catch (ValidationException $e) {
             return response()->json([

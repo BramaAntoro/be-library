@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/member/{id}', [MemberController::class, 'destroy']);
         Route::put('/member/{id}', [MemberController::class, 'update']);
 
+        // Route::post('/author');
+
     });
 
 });
