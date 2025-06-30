@@ -33,20 +33,15 @@ class MemberService
     public function UpdateMember($id, array $data)
     {
         $member = User::query()->findOrFail($id);
-
         $member->update($data);
-
         return $member;
     }
 
     public function deleteMember($id)
     {
         $user = User::query()->findOrFail($id);
-
         $user->delete();
-
         return true;
     }
-
 
 }

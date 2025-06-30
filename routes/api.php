@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,10 +19,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/member', [MemberController::class, 'store']);
         Route::get('/members', [MemberController::class, 'index']);
-        Route::delete('/member/{id}', [MemberController::class, 'destroy']);
         Route::put('/member/{id}', [MemberController::class, 'update']);
+        Route::delete('/member/{id}', [MemberController::class, 'destroy']);
 
-        // Route::post('/author');
+        Route::post('/author', [AuthorController::class, 'store']);
+        Route::get('/authors', [AuthorController::class, 'index']);
+        Route::put('/author/{id}', [AuthorController::class, 'update']);
+        Route::delete('/author/{id}', [AuthorController::class, 'destroy']);
 
     });
 
