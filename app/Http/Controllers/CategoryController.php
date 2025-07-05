@@ -2,47 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthorService;
+use App\Services\CategoryService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class AuthorController extends Controller
+class CategoryController extends Controller
 {
-    protected AuthorService $authorService;
+    protected CategoryService $categoryService;
 
-    public function __construct(AuthorService $authorService)
+    public function __construct(CategoryService $categoryService)
     {
-        $this->authorService = $authorService;
+        $this->categoryService = $categoryService;
     }
 
-    public function index(Request $request)
+    public function index()
     {
         try {
 
-            $search = $request->query('search');
-
-            if ($search) {
-
-                $authors = $this->authorService->searchAuthor($search);
-
-                return response()->json([
-                    "message" => "Search result",
-                    'data' => $authors
-                ], '200');
-
-            }
-
-            $authors = $this->authorService->getAllAuthors();
+            $categories = $this->categoryService->getAllCategories();
 
             return response()->json([
-                'message' => 'Data authors',
-                'data' => $authors
+                "message" => 'data categories',
+                'data' => $categories
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'failed to retrieve author data',
+                'message' => 'failed to retrieve category data',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -64,21 +51,20 @@ class AuthorController extends Controller
         try {
 
             $credentials = $request->validate([
-                'name' => 'required|string',
-                'bio' => 'string'
+                'name' => 'required|string|unique:categories,name'
             ]);
 
-            $author = $this->authorService->createAuthor($credentials);
+            $category = $this->categoryService->createCategory($credentials);
 
             return response()->json([
-                'message' => "Author with name $author->name has been created",
-                'data' => $author
+                'message' => "Category with name $category->name has been created",
+                'data' => $category
             ], 200);
 
         } catch (ValidationException $e) {
             return response()->json([
-                "message" => "failed to create a author",
-                "errors" => $e->errors()
+                'message' => 'Failed create category',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -107,21 +93,20 @@ class AuthorController extends Controller
         try {
 
             $credentials = $request->validate([
-                'name' => 'string',
-                'bio' => 'string'
+                'name' => 'string'
             ]);
 
-            $updatedAuthor = $this->authorService->updateAuthor($id, $credentials);
+            $Updatedcategory = $this->categoryService->updateCategory($id, $credentials);
 
             return response()->json([
-                "message" => "Author $updatedAuthor->name successfully updated",
-                "data" => $updatedAuthor
+                "message" => "Category $Updatedcategory->name successfully updated",
+                "data" => $Updatedcategory
             ], 200);
 
         } catch (ValidationException $e) {
             return response()->json([
-                'message' => 'failed to update a author',
-                'error' => $e->errors()
+                'message' => 'Failed update category',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -133,15 +118,15 @@ class AuthorController extends Controller
     {
         try {
 
-            $this->authorService->deleteAuthor($id);
+            $this->categoryService->deleteCategory($id);
 
-             return response()->json([
-                'message' => 'Author successfully deleted'
+            return response()->json([
+                'message' => 'Category successfully deleted'
             ], 200);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Author not found'
+                'message' => 'Category not found'
             ], 400);
         } catch (\Exception $e) {
             return response()->json([
