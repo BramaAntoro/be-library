@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login'])->middleware('AlreadyLoggedIn');
 
 Route::get('/categories', [CategoryController::class, 'index']);
+
+Route::get('/books', [BookController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -33,6 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/category', [CategoryController::class, 'store']);
         Route::put('/category/{id}', [CategoryController::class, 'update']);
         Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
+
+        Route::post('/book', [BookController::class, 'store']);
+        Route::put('/book/{id}', [BookController::class, 'update']);
+        Route::delete('/book/{id}', [BookController::class, 'destroy']);
 
     });
 

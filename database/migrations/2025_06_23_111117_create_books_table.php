@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('description');
             $table->integer('total_copies')->default(0);
             $table->integer('total_borrowed')->default(0);
-            $table->integer('total')->default(0);
             $table->string('cover_image_url');
             $table->timestamps();
         });

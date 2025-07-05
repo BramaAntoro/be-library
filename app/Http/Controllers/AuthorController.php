@@ -77,7 +77,7 @@ class AuthorController extends Controller
 
         } catch (ValidationException $e) {
             return response()->json([
-                "message" => "failed to create a author",
+                "message" => "failed to create author",
                 "errors" => $e->errors()
             ], 500);
         }
@@ -135,7 +135,7 @@ class AuthorController extends Controller
 
             $this->authorService->deleteAuthor($id);
 
-             return response()->json([
+            return response()->json([
                 'message' => 'Author successfully deleted'
             ], 200);
 
